@@ -1,4 +1,45 @@
 <div class="container">
-    <h1 class="text-center">Library Management System</h1>
-    <p class="text-center">Bem-vindo ao sistema de gerenciamento da biblioteca.</p>
-</div>
+        <div class="container">
+        <h1 class="text-center my-4">Library Management System</h1>
+        <p class="text-center">Bem-vindo ao sistema de gerenciamento da biblioteca.</p>
+
+        <div class="container">
+        <h1 class="text-center my-4">Livros Disponíveis</h1>
+
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Título</th>
+                        <th scope="col">Autor</th>
+                        <th scope="col">Disponibilidade</th>
+                        <th scope="col">Previsão de Disponibilidade</th>
+                        <th scope="col">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each books}}
+                    <tr>
+                        <td>{{title}}</td>
+                        <td>{{author}}</td>
+                        <td>{{availability}}</td>
+                        <td>{{availabilityDate}}</td>
+                        <td>
+                            <a href="/books/rent/{{id}}" class="btn btn-success">Alugar</a>
+                            {{#if isAdmin}}
+                            <a href="/books/edit/{{id}}" class="btn btn-warning">Alterar</a>
+                            {{/if}}
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+
+        <a href="/logout" class="btn btn-secondary mt-4">Logout</a>
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
