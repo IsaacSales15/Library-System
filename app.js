@@ -15,9 +15,12 @@ app.use(bodyParser.json());
 
 app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')));
 
-//Rotas brabíssimas
-//Rota princpal
 app.use('/', login);
+
+//Rota raiz
+app.get('/', (req, res) => {
+    res.render('login');
+});
 
 app.listen(3000, () => {
     console.log('Servidor rodando na porta 3000');

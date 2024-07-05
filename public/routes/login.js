@@ -1,7 +1,15 @@
-const bcrypt = require('bcrypt');
 const express = require('express');
 const router = express.Router();
 const connect = require('./database');
+
+//Função para fazer essa comparação ai (literalmente a ideia mais idiota que eu tive, mas funcionou (: )
+function match (a, b) {
+    if(a === b){
+        return true;
+    } else {
+        return false;
+    }
+}
 
 // Rota de registro
 router.get('/register', (req, res) => {
@@ -14,11 +22,10 @@ router.post('/register', async (req, res) => {
     let email = req.body.useremail;
     let password = req.body.password;
 
+    // Bagulho para inserir no banco
     try {
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        let sql = `INSERT INTO users (userName, userEmail, userPassword) VALUES ('${name}', '${email}', '${password}')`;
-        connect.query(sql, [name, email, hashedPassword], (err, result) => {
+        let sql = `INSERT INTO users (userName, userEmail, userPassword) VALUES ('${name}', '${email}', '${password}' )`;
+        connect.query(sql, [name, email, password], (err, result) => {
             if (err) {
                 console.error('Erro:', err);
                 return res.send('Erro ao cadastrar o usuário');
@@ -27,9 +34,12 @@ router.post('/register', async (req, res) => {
             res.redirect('/');
         });
     } catch (error) {
-        console.error('Erro ao criar hash da senha:', error);
-        res.status(500).send('Erro ao cadastrar o usuário');
+        res.send('Erro ao cadastrar o usuário');
     }
+});
+
+router.get('/', (req, res) => {
+    res.render('login');
 });
 
 // Método POST para sistema de verificação (login)
@@ -41,16 +51,17 @@ router.post('/login', (req, res) => {
     connect.query(sql, [email], async (error, results) => {
         if (error) {
             console.log('Erro:', error);
-            return res.status(500).send('Erro no servidor');
+            return res.send('Erro no servidor');
         }
 
         if (results.length > 0) {
             let user = results[0];
+            console.log('Usuário encontrado:', user);
 
             try {
-                const match = await bcrypt.compare(password, user.userPassword);
-                if (match) {
-                    res.redirect('/main');
+                
+                if (match(password, user.userPassword)) {
+                    res.redirect('/home');
                 } else {
                     res.send('Senha incorreta!');
                 }
@@ -62,6 +73,11 @@ router.post('/login', (req, res) => {
             res.send('Usuário não encontrado');
         }
     });
+});
+
+//Rota do home, daqui a pouco vou tirar isso daqui
+router.get('/home', (req, res) => {
+    res.render('home');
 });
 
 module.exports = router;
