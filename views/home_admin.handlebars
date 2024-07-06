@@ -1,8 +1,5 @@
     <div class="container">
-        <h1 class="text-center my-4">Biblioteca</h1>
-        {{#if isAdmin}}
-        <a href="/admin/home" class="btn btn-primary mb-4">Admin Home</a>
-        {{/if}}
+        <h1 class="text-center my-4">Admin Home</h1>
         <h2 class="text-center my-4">Livros Disponíveis</h2>
         <div class="table-responsive">
             <table class="table table-bordered">
@@ -16,13 +13,14 @@
                 <tbody>
                     {{#each books}}
                     <tr>
-                        <td>{{bookTitle}}</td>
-                        <td>{{author}}</td>
-                        <td>{{categorieName}}</td>
+                        <td>{{this.bookTitle}}</td>
+                        <td>{{this.author}}</td>
+                        <td>{{this.categorieName}}</td>
                     </tr>
                     {{/each}}
                 </tbody>
             </table>
-            <a href="/logout" class="btn btn-secondary mt-4">Logout</a>
         </div>
+        <a href="/admin/edit" class="btn btn-primary mt-4">Editar Livros e Categorias</a>
+        <a href="/logout" class="btn btn-secondary mt-4">Logout</a>
     </div>

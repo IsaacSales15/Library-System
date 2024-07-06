@@ -37,7 +37,8 @@ router.post('/login', (req, res) => {
 
     if (useremail === 'admin@gmail.com' && password === 'admin') {
         res.cookie('login', 'authenticated', { maxAge: 900000, httpOnly: true });
-        return res.redirect('/home');
+        res.cookie('isAdmin', true, { maxAge: 900000, httpOnly: true });
+        return res.redirect('/admin/home');
     } else {
         connect.query('SELECT * FROM users WHERE userEmail = ?', [useremail], (error, results) => {
             if (error) {
@@ -50,24 +51,38 @@ router.post('/login', (req, res) => {
 
                 if (password === user.userPassword) {
                     res.cookie('login', 'authenticated', { maxAge: 900000, httpOnly: true });
+                    res.cookie('isAdmin', false, { maxAge: 900000, httpOnly: true });
                     return res.redirect('/home');
                 } else {
                     return res.send('Senha incorreta');
                 }
             } else {
-                return res.status(404).send('Usuário não encontrado');
+                return res.send('Usuário não encontrado');
             }
         });
     }
 });
 
-
 router.get('/logout', (req, res) => {
     res.clearCookie('login');
+    res.clearCookie('isAdmin');
     res.redirect('/');
 });
 
-//Rota do home, daqui a pouco vou tirar isso daqui
+//Rota do home para admin
+router.get('/admin/home', (req, res) => {
+    if (req.cookies.isAdmin === 'true') {
+        res.render('home_admin');
+    } else {
+        res.redirect('/home');
+    }
+});
+
+router.get('/back', (req, res) => {
+    res.render('home_admin')
+});
+
+// Rota do home para usuários
 router.get('/home', (req, res) => {
     res.render('home');
 });
